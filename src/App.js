@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PostForm from './components/PostForm';
 import PostList from './components/PostList';
 import './style/App.css';
@@ -6,23 +6,39 @@ import PostFilter from './components/PostFilter';
 import MyModal from './components/UI/MyModal/MyModal';
 import MyButton from './components/UI/button/MyButton';
 import { usePosts } from './hooks/usePosts';
+import axios from 'axios';
+import PostService from './components/API/PostService';
+import Loader from './components/UI/Loader/Loader';
 
 
 function App() {
-  const [posts, setPosts] = useState([
-    { id: 1, title: 'Test port 1', body: '123ipt' },
-    { id: 2, title: '12321 port 2', body: 'asadascr2212334ipt' },
-    { id: 3, title: 'цууаа', body: 'цацуаpt' }
-  ])
+  const [posts, setPosts] = useState([])
 
   const [modal, setModal] = useState(false)
   const [filter, setFilter] = useState({ sort: '', query: '' })
   const sortedSerchedPosts = usePosts(posts, filter.sort, filter.query)
 
+  const [isPostsLoading, setIsPostsLoading] = useState(false)
+
+  useEffect(() => {
+    fetchPosts()
+  }, []
+  )
 
   const createPost = (newPost) => {
     setPosts([...posts, newPost])
     setModal(false)
+  }
+
+  async function fetchPosts() {
+    setIsPostsLoading(true)
+    setTimeout(async () => {
+      const posts = await PostService.getAll()
+      setPosts(posts)
+      setIsPostsLoading(false)
+
+    }, 1000)
+
   }
 
   const removePost = (post) => {
@@ -41,8 +57,12 @@ function App() {
         filter={filter}
         setFilter={setFilter}
       />
-      <PostList remove={removePost} posts={sortedSerchedPosts} title={'JS'} />
-
+      {isPostsLoading
+        ? <Loader />
+        :
+        <PostList remove={removePost} posts={sortedSerchedPosts} title={'JS'} />
+      }
+      <Loader />
     </div>
   );
 }
