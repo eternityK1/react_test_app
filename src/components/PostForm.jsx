@@ -12,7 +12,7 @@ const PostForm = ({ create }) => {
 
         const newPost = { ...post, id: Date.now() }
         create(newPost)
-        //console.log(create)
+
         setPost({ title: '', body: '' })
     }
 
