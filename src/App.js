@@ -36,8 +36,7 @@ function App() {
       const posts = await PostService.getAll()
       setPosts(posts)
       setIsPostsLoading(false)
-
-    }, 1000)
+    }, 2000)
 
   }
 
@@ -47,7 +46,9 @@ function App() {
 
   return (
     <div className="App">
+
       <MyButton style={{ marginTop: '30px' }} onClick={() => setModal(true)}>Создать пост</MyButton>
+
       <MyModal visable={modal} setVisible={setModal}>
         <PostForm create={createPost} />
       </MyModal>
@@ -58,11 +59,11 @@ function App() {
         setFilter={setFilter}
       />
       {isPostsLoading
-        ? <Loader />
+        ? <div style={{ display: 'flex', justifyContent: 'center', marginTop: '50px' }}><Loader /></div>
         :
         <PostList remove={removePost} posts={sortedSerchedPosts} title={'JS'} />
       }
-      <Loader />
+
     </div>
   );
 }
